@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+from scipy.optimize import brentq
 
 M = np.linspace(0.1, 4, num=40, endpoint=True)
 # T/T0 for isentropic flow, M=mach number, gamma = specific heat ratio
@@ -43,3 +43,11 @@ plt.ylim(0, 6)
 plt.axvline(1, linestyle="--")
 plt.savefig("plots/area_ratio.png")
 plt.show()
+
+
+def mach_from_area(AR, gamma=1.4):
+    def f(M):
+        return area_ratio(M, gamma) - AR
+    return brentq(f, 1.0001, 50)
+print(mach_from_area(2.0))
+print(area_ratio(mach_from_area(2.0)))
