@@ -15,7 +15,7 @@ def P_ratio(M, gamma = 1.4):
 result = P_ratio(M)
 
 
-plt.title("Isentropiuc Property Ratios vs. Mach Number.")
+plt.title("Isentropic Property Ratios vs. Mach Number.")
 plt.plot(M, Tresult, label="T/T0")
 plt.xlabel("Mach Number")
 plt.ylabel("Ratio to Stagnation Value")
@@ -45,9 +45,15 @@ plt.savefig("plots/area_ratio.png")
 plt.show()
 
 
-def mach_from_area(AR, gamma=1.4):
+def mach_from_area(AR, supersonic = True, gamma=1.4):
+    if AR<1:
+        raise ValueError("AR must be greater than 1")
+    if AR == 1:
+        return(1.0)
+    if supersonic: 
+        low, high = 1.0001, 50
+    else: low, high = 0.0001, 0.9999
     def f(M):
         return area_ratio(M, gamma) - AR
-    return brentq(f, 1.0001, 50)
-print(mach_from_area(2.0))
-print(area_ratio(mach_from_area(2.0)))
+    return brentq(f, low, high)
+print(mach_from_area(1.0))
