@@ -13,14 +13,12 @@ def P_ratio(M, gamma = 1.4):
     Pratio = ((1 + ((gamma - 1) / 2) * M**2)**(-gamma / (gamma-1)))
     return Pratio
 
-
-
-
+# A/A* for isentropic flow, M = mach number, gamma = specific heat ratio
 def area_ratio(M_area, gamma = 1.4):
     Aratio =(1/M_area) * ((2/(gamma + 1)) * (1 + ((gamma - 1) / 2) * M_area**2)) ** ((gamma+1)/(2 * (gamma-1)))
     return Aratio
 
-
+# Function to find mach number from area ratio
 def mach_from_area(AR, supersonic = True, gamma=1.4):
     if AR<1:
         raise ValueError("AR must be at least 1")
