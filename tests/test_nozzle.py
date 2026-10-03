@@ -15,3 +15,6 @@ def test_m_dot():
 
 def test_m_dot_double_pressure():
     assert m_dot(2 * p_abs_Pa(80), circle_area_m2(3), 293) == pytest.approx(2 * m_dot(p_abs_Pa(80), circle_area_m2(3), 293), rel=1e-3)
+
+def test_m_dot_Cd_09():
+    assert m_dot(p_abs_Pa(80), circle_area_m2(3), 293, Cd = 0.9) == pytest.approx(0.9 * m_dot(p_abs_Pa(80), circle_area_m2(3), 293), rel=1e-3)
