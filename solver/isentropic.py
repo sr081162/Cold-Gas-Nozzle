@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import brentq
 
-
 # T/T0 for isentropic flow, M=mach number, gamma = specific heat ratio
 def T_ratio(M, gamma = 1.4):
     Tratio = ((1 + ((gamma - 1) / 2) * M**2)**-1)
