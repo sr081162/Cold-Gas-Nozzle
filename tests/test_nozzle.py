@@ -1,5 +1,5 @@
 import pytest
-from solver.nozzle import p_abs_Pa, m_dot, circle_area_m2
+from solver.nozzle import p_abs_Pa, m_dot, circle_area_m2, exit_conditions
 
 def test_p_abs_Pa_80():
     assert p_abs_Pa(80) == pytest.approx(640500, rel=1e-3)
@@ -18,3 +18,6 @@ def test_m_dot_double_pressure():
 
 def test_m_dot_Cd_09():
     assert m_dot(p_abs_Pa(80), circle_area_m2(3), 293, Cd = 0.9) == pytest.approx(0.9 * m_dot(p_abs_Pa(80), circle_area_m2(3), 293), rel=1e-3)
+
+def test_exit_conditions():
+    assert exit_conditions(p_abs_Pa(80), 293, 1.6) == pytest.approx({'M_exit': 1.935, 'P_exit': 9.052e+04, 'T_exit': 167.5, 'v_exit': 510.6}, rel=1e-3)
