@@ -1,5 +1,6 @@
 from solver.isentropic import mach_from_area, T_ratio, P_ratio
 import numpy as np
+import matplotlib.pyplot as plt
 gamma = 1.4
 G0 = 9.80665
 
@@ -45,6 +46,23 @@ def thrust_performance(p0, T0, d_throat_mm, ER, alpha_deg = 15, P_a = p_abs_Pa(0
 
 if __name__ == "__main__":
 
+    nozzles = [("A", 1.6), ("B", 3.5)]
+   
+    psig = np.linspace(10, 100, 46, endpoint=True)
+    F_data = {}
+    Isp_data = {}
+    
+    for name, ER in nozzles:
+        F_list = []
+        Isp_list = []
+        for p in psig:
+            p0 = p_abs_Pa(p)
+            perf = thrust_performance(p0, 293, 3, ER, alpha_deg = 15)
+            F_list.append(perf["F"])
+            Isp_list.append(perf["Isp"])
+        F_data[name] = F_list
+        Isp_data[name] = Isp_list
+    
     p0 = p_abs_Pa(80)
     result = exit_conditions(p_abs_Pa(80), 293, 1.6)
     for name, value in result.items():
@@ -52,3 +70,32 @@ if __name__ == "__main__":
     perf = thrust_performance(p_abs_Pa(80), 293, 3, 1.6, alpha_deg = 15)
     for name, value in perf.items():
         print(f"{name}: {value:.4g}")
+
+    plt.figure()
+    plt.plot(psig, F_data["A"], label = "Nozzle A, ER = 1.6")
+    plt.legend()
+    plt.xlabel("Supply Pressure (psig)")
+    plt.ylabel("Thrust (N)")
+    plt.title("Thrust vs. Pressure")
+    plt.grid(True)
+    plt.plot(psig, F_data["B"], label = "Nozzle B, ER = 3.5")
+    plt.legend()
+    plt.axvline(26, linestyle="--", color = "black", label = "B valid above this (approx.)")
+    plt.axvspan(10, 26, color = "gray")
+    plt.savefig("plots/thrust_sweep.png")
+
+    plt.figure()
+    plt.plot(psig, Isp_data["A"], label = "Nozzle A, ER = 1.6")
+    plt.legend()
+    plt.xlabel("Supply Pressure (psig)")
+    plt.ylabel("Specific Impulse (s)")
+    plt.title("Specific Impulse vs. Pressure")
+    plt.grid(True)
+    plt.plot(psig, Isp_data["B"], label = "Nozzle B, ER = 3.5")
+    plt.legend()
+    plt.axvspan(10, 24, alpha=0.15, color="gray", label="model unreliable")
+    plt.legend()
+    plt.text(60, -15, "Nozzle B: model invalid\n(flow separates, Step 3)", fontsize=9)
+    plt.savefig("plots/Isp_sweep.png")
+    plt.show()
+    
